@@ -14,7 +14,7 @@ def send_sms(PhoneNumber,Message):
         client.publish(
                 PhoneNumber='+918806418421',
                 Message='hey hafhhjfhda'
-        )    
+        )
         return True
     except Exception as e:
         print(e)
@@ -60,7 +60,7 @@ def user_save_reciever(sender, instance, created, *args, **kwargs):
         send_sms(instance.phonenumber,message)
 
 
-post_save.connect(post_save_policy_reciever, sender=UserProfile)
+post_save.connect(user_save_reciever, sender=UserProfile)
 
 
 class Item(models.Model):
@@ -107,7 +107,7 @@ class OrderItem(models.Model):
 
 
     def get_amount_saved(self):
-        return self.get_total_item_price() 
+        return self.get_total_item_price()
 
     def get_final_price(self):
         return self.get_total_item_price()
@@ -185,10 +185,10 @@ class Seller(models.Model):
     seller_id = models.IntegerField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-
-def userprofile_receiver(sender, instance, created, *args, **kwargs):
-    if created:
-        userprofile = UserProfile.objects.create(user=instance)
-
-
-post_save.connect(userprofile_receiver, sender=settings.AUTH_USER_MODEL)
+# 
+# def userprofile_receiver(sender, instance, created, *args, **kwargs):
+#     if created:
+#         userprofile = UserProfile.objects.create(user=instance)
+#
+#
+# post_save.connect(userprofile_receiver, sender=settings.AUTH_USER_MODEL)

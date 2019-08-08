@@ -13,22 +13,22 @@ from .models import *
 import random
 import string
 import stripe
-import boto3
+# import boto3
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-client = boto3.client('sns',region_name="us-east-1")
-def send_sms(PhoneNumber,Message):
-    try:
-        client.publish(
-                PhoneNumber='+918806418421',
-                Message='hey hafhhjfhda'
-        )
-        return True
-    except Exception as e:
-        print(e)
-        return False
+# client = boto3.client('sns',region_name="us-east-1")
+# def send_sms(PhoneNumber,Message):
+#     try:
+#         client.publish(
+#                 PhoneNumber='+918806418421',
+#                 Message='hey hafhhjfhda'
+#         )
+#         return True
+#     except Exception as e:
+#         print(e)
+#         return False
 
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
