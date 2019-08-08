@@ -21,7 +21,6 @@ urlpatterns = [
     path('shoes/', shoes),
     path('electronics/', electronics),
     #path('addproduct/', addproduct)
-
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
-    path('add-product/', add_product),
+    # path('add-product/', add_product),
 ]

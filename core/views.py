@@ -542,8 +542,16 @@ class RequestRefundView(View):
                 messages.info(self.request, "This order does not exist.")
                 return redirect("core:request-refund")
 
-def add_product(request):
+# def edit_product(request)
+
+
+def add_product(request,slug):
     if request.method == 'GET':
+        item = Item.objects.get(slug=slug)
+        context={
+            'item':item
+        }
+        return render(request,'addproduct.html',context)
         
 @login_required
 def seller(request):
