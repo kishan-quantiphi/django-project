@@ -39,14 +39,17 @@ ADDRESS_CHOICES = (
 
 
 class UserProfile(models.Model):
-    TYPE = (
-        ('Seller', 'Seller'),
-        ('Buyer', 'Buyer'),
-    )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100,null=True,blank=True)
+    age = models.IntegerField(null=True,blank=True)
+    email = models.CharField(max_length=100,null=True,blank=True)
+    city = models.CharField(max_length=100,null=True,blank=True)
+    country = models.CharField(max_length=100,null=True,blank=True)
+    pincode = models.IntegerField(null=True,blank=True)
+    role = models.CharField(max_length=100,null=True,blank=True)
+    phonenumber = models.CharField(max_length=100,null=True,blank=True)
 
-    one_click_purchasing = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -69,7 +72,8 @@ class Item(models.Model):
     description = models.TextField()
     quantity = models.IntegerField()
     image = models.ImageField()
-    seller = models.ForeignKey('Seller', on_delete=models.CASCADE)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
