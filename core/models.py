@@ -4,7 +4,21 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
+import boto3
 
+
+client = boto3.client('sns',region_name="us-east-1")
+
+def send_sms(PhoneNumber,Message):
+    try:
+        client.publish(
+                PhoneNumber='+918806418421',
+                Message='hey hafhhjfhda'
+        )    
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -25,15 +39,28 @@ ADDRESS_CHOICES = (
 
 
 class UserProfile(models.Model):
+    TYPE = (
+        ('Seller', 'Seller'),
+        ('Buyer', 'Buyer'),
+    )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     age = models.IntegerField()
-    user_type = models.CharField(max_length=20)
+    phonenumber = models.CharField(max_length=10,null= False, blank=True)
+    user_type = models.CharField(choices=TYPE, null=False, max_length=20, blank=False)
     one_click_purchasing = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
+
+def user_save_reciever(sender, instance, created, *args, **kwargs):
+    if created:
+        message = 'Your account has been created in Ecommerce website'
+        send_sms(instance.phonenumber,message)
+
+
+post_save.connect(post_save_policy_reciever, sender=UserProfile)
 
 
 class Item(models.Model):
