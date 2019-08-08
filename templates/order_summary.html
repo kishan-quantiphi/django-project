@@ -63,7 +63,14 @@
 
     </div>
   </main>
-
+  {% if outofstock %}
+  <script>
+    var l = {{ list|safe }}
+    console.log(l)
+    alert( l +" out of stock!");
+    window.location.href='/order-summary';
+</script>
+    {% endif %}
 {% endblock content %}
 
 

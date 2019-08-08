@@ -21,7 +21,7 @@
 
           <!-- Links -->
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="/">All
                 <span class="sr-only">(current)</span>
               </a>
@@ -29,7 +29,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/shirt">Shirts</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
               <a class="nav-link" href="/shoes">Shoes</a>
             </li>
             <li class="nav-item">
@@ -136,13 +136,7 @@
 
     </div>
   </main>
-  {% if outofstock %}
-  <script>
-    var l = {{ list|safe }}
-    console.log(l)
-    alert( l +" out of stock!")
-</script>
-    {% endif %}
+
 {% endblock content %}
 
 
