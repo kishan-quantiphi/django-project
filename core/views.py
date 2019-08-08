@@ -62,8 +62,8 @@ class CheckoutView(View):
                     l.append(i.item.title)
             print(flag)
             form = CheckoutForm()
-            if flag:        
-                
+            if flag:
+
                 context = {
                     'form': form,
                     'couponform': CouponForm(),
@@ -584,6 +584,13 @@ def electronics(request):
     }
     return render(request,"electronics.html",context)
 
+#
+# def signup(request):
+#     return render(request,"signup.html")
+#
+#
+# def login(request):
+#     return render(request,"login.html")
 # @login_required
 # def addproduct(request):
 #     seller = Seller.objects.filter(user=request.user)

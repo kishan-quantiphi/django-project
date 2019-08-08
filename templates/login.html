@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <main >
+      <!-- to give values i href dynamically -->
+    <div class="container wow fadeIn">
+      <h2 class="my-5 h2 text-center">Login</h2>
+      <div class="row">
+        <div class="col-md-8 mb-4 centre">
+          <div class="card">
+            <form method="POST" class="card-body">
+              {% csrf_token %}
+
+              <div class='hideable_shipping_form'>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_username"></label>
+                    Username:<input type="text" name="username" class="vTextField" maxlength="12" required id="id_username">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_password"></label>
+                    Password:<input type="password" name="title" class="vTextField" minlength="6" maxlength="12" required id="id_password">
+                </div>
+
+                <div class="submit-row mb-4">
+                    <button class="btn btn-primary waves-effect waves-light" type="submit" style="float:right">Login</button>
+                </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+{% endblock content %}
