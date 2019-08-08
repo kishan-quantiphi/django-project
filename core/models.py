@@ -8,8 +8,8 @@ from django_countries.fields import CountryField
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
-    ('SW', 'Sport wear'),
-    ('OW', 'Outwear')
+    ('SH', 'Shoes'),
+    ('E', 'Electronics')
 )
 
 LABEL_CHOICES = (
@@ -40,6 +40,7 @@ class Item(models.Model):
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     slug = models.SlugField()
     description = models.TextField()
+    quantity = models.IntegerField()
     image = models.ImageField()
     seller = models.ForeignKey('Seller', on_delete=models.CASCADE)
 
