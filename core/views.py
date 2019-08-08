@@ -529,6 +529,20 @@ def remove_single_item_from_cart(request, slug):
 
 
 
+
+
+# def edit_product(request)
+
+
+def add_product(request,slug):
+    if request.method == 'GET':
+        item = Item.objects.get(slug=slug)
+        context={
+            'item':item
+        }
+        return render(request,'addproduct.html',context)
+        
+
 def seller(request):
     if request.user.is_authenticated():
         seller = Seller.objects.filter(user=request.user)

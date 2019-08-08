@@ -5,6 +5,8 @@ from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 import boto3
+from django.db.models.signals import post_save,pre_save,m2m_changed
+
 
 
 client = boto3.client('sns',region_name="us-east-1")
@@ -14,11 +16,9 @@ def send_sms(PhoneNumber,Message):
         client.publish(
                 PhoneNumber='+918806418421',
                 Message='hey hafhhjfhda'
-        )
-        return True
+        )    
     except Exception as e:
         print(e)
-        return False
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -41,6 +41,7 @@ ADDRESS_CHOICES = (
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
     name = models.CharField(max_length=100,null=True,blank=True)
     age = models.IntegerField(null=True,blank=True)
     email = models.CharField(max_length=100,null=True,blank=True)
@@ -54,13 +55,13 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-def user_save_reciever(sender, instance, created, *args, **kwargs):
-    if created:
-        message = 'Your account has been created in Ecommerce website'
-        send_sms(instance.phonenumber,message)
+# def user_save_reciever(sender, instance, created, *args, **kwargs):
+#     if created:
+#         message = 'Your account has been created in Ecommerce website'
+#         send_sms(instance.phonenumber,message)
 
 
-post_save.connect(user_save_reciever, sender=UserProfile)
+# post_save.connect(user_save_reciever, sender=UserProfile)
 
 
 class Item(models.Model):
@@ -74,6 +75,7 @@ class Item(models.Model):
     image = models.ImageField()
     seller = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.title
@@ -97,9 +99,9 @@ class Item(models.Model):
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
+    ordered = models.BooleanField(default=False,blank=True,null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=1,blank=True,null=True)
 
     def __str__(self):
         return f"{self.quantity} of {self.item.title}"
@@ -155,12 +157,12 @@ class Order(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=100)
-    apartment_address = models.CharField(max_length=100)
-    country = CountryField(multiple=False)
-    zip = models.CharField(max_length=100)
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
-    default = models.BooleanField(default=False)
+    street_address = models.CharField(max_length=100,blank=True,null=True)
+    apartment_address = models.CharField(max_length=100,blank=True,null=True)
+    country = CountryField(multiple=False,blank=True,null=True)
+    zip = models.CharField(max_length=100,blank=True,null=True)
+    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES,blank=True,null=True)
+    default = models.BooleanField(default=False,blank=True,null=True)
 
     def __str__(self):
         return self.user.username
@@ -172,7 +174,7 @@ class Address(models.Model):
 class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.SET_NULL, blank=True, null=True)
-    amount = models.FloatField()
+    amount = models.FloatField(blank=True,null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -187,10 +189,10 @@ class Seller(models.Model):
     seller_id = models.IntegerField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-# 
+
 # def userprofile_receiver(sender, instance, created, *args, **kwargs):
 #     if created:
 #         userprofile = UserProfile.objects.create(user=instance)
-#
-#
+
+
 # post_save.connect(userprofile_receiver, sender=settings.AUTH_USER_MODEL)

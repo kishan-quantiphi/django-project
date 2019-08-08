@@ -19,24 +19,21 @@
 
                 <div class="md-form mb-5">
                     <label class="required" for="id_title"></label>
-                    Title:<input type="text" name="title" class="vTextField" maxlength="100" required="" id="id_title" value="{{ value }}">
+                    Title:<input type="text" name="title" class="vTextField" maxlength="100" required="" id="id_title" value="{{ item.title }}">
                 </div>
 
                 <div class="md-form mb-5">
                     <label class="required" for="id_price"></label>
-                    Price:<input type="number" name="price" step="any" required="" id="id_price" value="{{ value }}">
+                    Price:<input type="number" name="price" step="any" required="" id="id_price" value="{{item.price}}">
                 </div>
-
                 <div class="md-form mb-5">
-                    <label for="id_discount_price"></label>
-                    Discount price:<input type="number" name="discount_price" step="any" id="id_discount_price" value="{{ value }}">
-                </div>
-
-
+                  <label class="required" for="id_quantity"></label>
+                  Quantity:<input type="number" name="quantity" step="any" required="" id="id_pquantity" value="{{item.quantity}}">
+              </div>
                 <div class="row">
                   <div class="col-lg-4 col-md-12 mb-4">
                       <label class="required" for="id_category">Category:</label>
-                      <select name="category" required="" id="id_category" value="{{ value }}">
+                      <select name="category" required="" id="id_category" value="{{ item.category }}">
                       <option value="">---------</option>
                       <option value="S" selected="">Shirt</option>
                       <option value="SW">Sport wear</option>
@@ -45,7 +42,7 @@
                   </div>
                   <div class="col-lg-4 col-md-6 mb-4">
                       <label class="required" for="id_label">Label:</label>
-                      <select name="label" required="" id="id_label" value="{{ value }}">
+                      <select name="label" required="" id="id_label" value="{{ item.label }}">
                       <option value="">---------</option>
                       <option value="P" selected="">primary</option>
                       <option value="S">secondary</option>
@@ -56,12 +53,12 @@
 
                 <div class="md-form mb-5">
                     <label class="required" for="id_slug"></label>
-                    Slug:<input type="text" name="slug" class="vTextField" maxlength="50" required="" id="id_slug" value="{{ value }}">
+                    Slug:<input type="text" name="slug" class="vTextField" maxlength="50" required="" id="id_slug" value="{{ item.slug }}">
                 </div>
 
                 <div class="md-form mb-5">
                     <label class="required" for="id_description"></label>
-                    Description:<textarea name="description" cols="40" rows="10" class="vLargeTextField" required="" id="id_description" value="{{ value }}"></textarea>
+                    Description:<textarea name="description" cols="40" rows="10" class="vLargeTextField" required="" id="id_description">{{item.description}}</textarea>
                 </div>
 
                 <div class="md-form mb-5">
@@ -69,7 +66,7 @@
                     <pre>
 
                     </pre>
-                    <p class="file-upload">Currently: <a href="" value="{{ value }}"> <!-- dynamically name of image --> </a><br>
+                    <p class="file-upload">Currently: <img src="{{ item.image.url }}" height="200" width="200"> <!-- dynamically name of image --> </img><br>
                     Change:
                     <input type="file" name="image" accept="image/*" id="id_image"></p>
                 </div>

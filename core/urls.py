@@ -19,6 +19,10 @@ urlpatterns = [
     path('shoes/', shoes),
     path('electronics/', electronics),
     #path('addproduct/', addproduct)
+
     path('login/', login_site),
     path('signup/', signup)
+
+    # path('add-product/', add_product),
+
 ]
