@@ -8,7 +8,7 @@ from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.utils import timezone
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
-from .models import Item, OrderItem, Order, Address, Payment, UserProfile
+from .models import *
 
 import random
 import string
@@ -24,7 +24,7 @@ def send_sms(PhoneNumber,Message):
         client.publish(
                 PhoneNumber='+918806418421',
                 Message='hey hafhhjfhda'
-        )    
+        )
         return True
     except Exception as e:
         print(e)

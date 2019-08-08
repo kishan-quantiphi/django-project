@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <main >
+      <!-- to give values i href dynamically -->
+    <div class="container wow fadeIn">
+      <h2 class="my-5 h2 text-center">Product</h2>
+      <div class="row">
+        <div class="col-md-8 mb-4 centre">
+          <div class="card">
+            <form method="POST" class="card-body">
+              {% csrf_token %}
+
+              <h3>Add Products</h3>
+
+              <div class='hideable_shipping_form'>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_title"></label>
+                    Title:<input type="text" name="title" class="vTextField" maxlength="100" required="" id="id_title" value="{{ value }}">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_price"></label>
+                    Price:<input type="number" name="price" step="any" required="" id="id_price" value="{{ value }}">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label for="id_discount_price"></label>
+                    Discount price:<input type="number" name="discount_price" step="any" id="id_discount_price" value="{{ value }}">
+                </div>
+
+
+                <div class="row">
+                  <div class="col-lg-4 col-md-12 mb-4">
+                      <label class="required" for="id_category">Category:</label>
+                      <select name="category" required="" id="id_category" value="{{ value }}">
+                      <option value="">---------</option>
+                      <option value="S" selected="">Shirt</option>
+                      <option value="SW">Sport wear</option>
+                      <option value="OW">Outwear</option>
+                      </select>
+                  </div>
+                  <div class="col-lg-4 col-md-6 mb-4">
+                      <label class="required" for="id_label">Label:</label>
+                      <select name="label" required="" id="id_label" value="{{ value }}">
+                      <option value="">---------</option>
+                      <option value="P" selected="">primary</option>
+                      <option value="S">secondary</option>
+                      <option value="D">danger</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_slug"></label>
+                    Slug:<input type="text" name="slug" class="vTextField" maxlength="50" required="" id="id_slug" value="{{ value }}">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_description"></label>
+                    Description:<textarea name="description" cols="40" rows="10" class="vLargeTextField" required="" id="id_description" value="{{ value }}"></textarea>
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_image">Image:</label>
+                    <pre>
+
+                    </pre>
+                    <p class="file-upload">Currently: <a href="" value="{{ value }}"> <!-- dynamically name of image --> </a><br>
+                    Change:
+                    <input type="file" name="image" accept="image/*" id="id_image"></p>
+                </div>
+
+                <div class="submit-row mb-4">
+                    <button class="btn btn-danger waves-effect waves-light m-0" type="submit">Delete</button>
+
+                    <button class="btn btn-primary waves-effect waves-light" type="submit" style="float:right">Save</button>
+                </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+{% endblock content %}
