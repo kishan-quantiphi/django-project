@@ -8,7 +8,7 @@ from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.utils import timezone
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
-from .models import Item, OrderItem, Order, Address, Payment, UserProfile
+from .models import *
 
 import random
 import string
@@ -514,3 +514,29 @@ class RequestRefundView(View):
             except ObjectDoesNotExist:
                 messages.info(self.request, "This order does not exist.")
                 return redirect("core:request-refund")
+
+@login_required
+def seller(request):
+    seller = Seller.objects.filter(user=request.user)
+    if seller:
+        items = Item.objects.filter(seller=seller[0])
+        print(items)
+        context = {
+            'items' : items
+        }
+        return render(request,"seller.html",context)
+    else:
+        return redirect('/')
+
+
+@login_required
+def addproduct(request):
+    seller = Seller.objects.filter(user=request.user)
+    if seller:
+        if request.method == 'POST' :
+            title = request.POST['title']
+            price = request.POST['price']
+            category = request.POST['category']
+            label = request.POST['label']
+            slug = request.POST['slug']
+            description = request.POST['description']
