@@ -104,7 +104,7 @@ class OrderItem(models.Model):
 
 
     def get_amount_saved(self):
-        return self.get_total_item_price() 
+        return self.get_total_item_price()
 
     def get_final_price(self):
         return self.get_total_item_price()

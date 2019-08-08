@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <main >
+      <!-- to give values i href dynamically -->
+    <div class="container wow fadeIn">
+      <h2 class="my-5 h2 text-center">Sign In</h2>
+      <div class="row">
+        <div class="col-md-8 mb-4 centre">
+          <div class="card">
+            <form method="POST" class="card-body">
+              {% csrf_token %}
+
+              <div class='hideable_shipping_form'>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_username"></label>
+                    Username:<input type="text" name="username" class="vTextField" maxlength="12" required id="id_username">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_password"></label>
+                    Password:<input type="password" name="password" class="vTextField" minlength="6" maxlength="12" required id="id_password">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_repassword"></label>
+                    Retype Password:<input type="password" name="repassword" class="vTextField" minlength="6" maxlength="12" required id="id_repassword">
+                </div>
+
+                <hr>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_name"></label>
+                    Name:<input type="text" name="name" class="vTextField" required id="id_name">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_age"></label>
+                    Age:<input type="number" name="age" class="vTextField" required id="id_age" min="14" max="99">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_email"></label>
+                    Email:<input type="email" name="email" class="vTextField" required id="id_email">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_city"></label>
+                    City:<input type="text" name="city" class="vTextField" required id="id_city">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_country"></label>
+                    Country:<input type="text" name="country" class="vTextField" required id="id_country">
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_pincode"></label>
+                    Pincode:<input type="text" name="pincode" class="vTextField" required id="id_pincode" minlength=6 maxlength=6>
+                </div>
+
+                <div class="md-form mb-5">
+                    <label class="required" for="id_pincode"></label>
+                    Role:
+                    <div>
+                        <label for="buyer"></label>
+                        <input type="radio" id="buyer" name="role" value="buyer" checked>Buyer
+                    </div>
+                    <div>
+                        <label for="seller"></label>
+                        <input type="radio" id="seller" name="role" value="seller">Seller
+                    </div>
+                </div>
+
+                <div class="submit-row mb-4">
+                    <button class="btn btn-primary waves-effect waves-light" type="submit" style="float:right">Sign Up</button>
+                </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+{% endblock content %}

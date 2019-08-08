@@ -13,22 +13,22 @@ from .models import *
 import random
 import string
 import stripe
-import boto3
+# import boto3
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-client = boto3.client('sns',region_name="us-east-1")
-def send_sms(PhoneNumber,Message):
-    try:
-        client.publish(
-                PhoneNumber='+918806418421',
-                Message='hey hafhhjfhda'
-        )
-        return True
-    except Exception as e:
-        print(e)
-        return False
+# client = boto3.client('sns',region_name="us-east-1")
+# def send_sms(PhoneNumber,Message):
+#     try:
+#         client.publish(
+#                 PhoneNumber='+918806418421',
+#                 Message='hey hafhhjfhda'
+#         )
+#         return True
+#     except Exception as e:
+#         print(e)
+#         return False
 
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
@@ -62,8 +62,8 @@ class CheckoutView(View):
                     l.append(i.item.title)
             print(flag)
             form = CheckoutForm()
-            if flag:        
-                
+            if flag:
+
                 context = {
                     'form': form,
                     'couponform': CouponForm(),
@@ -595,6 +595,13 @@ def electronics(request):
     }
     return render(request,"electronics.html",context)
 
+#
+# def signup(request):
+#     return render(request,"signup.html")
+#
+#
+# def login(request):
+#     return render(request,"login.html")
 # @login_required
 # def addproduct(request):
 #     seller = Seller.objects.filter(user=request.user)
