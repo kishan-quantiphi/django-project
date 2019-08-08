@@ -22,8 +22,8 @@ def send_sms(PhoneNumber,Message):
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
-    ('SW', 'Sport wear'),
-    ('OW', 'Outwear')
+    ('SH', 'Shoes'),
+    ('E', 'Electronics')
 )
 
 LABEL_CHOICES = (
@@ -45,10 +45,6 @@ class UserProfile(models.Model):
     )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100,null=True,blank=True)
-    age = models.IntegerField(null=True,blank=True)
-    phonenumber = models.CharField(max_length=10,null= True, blank=True)
-    user_type = models.CharField(choices=TYPE, null=True, max_length=20, blank=True)
     one_click_purchasing = models.BooleanField(default=False)
 
     def __str__(self):
@@ -70,6 +66,7 @@ class Item(models.Model):
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     slug = models.SlugField()
     description = models.TextField()
+    quantity = models.IntegerField()
     image = models.ImageField()
     seller = models.ForeignKey('Seller', on_delete=models.CASCADE)
 

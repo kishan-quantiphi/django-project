@@ -51,35 +51,49 @@ def is_valid_form(values):
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
+        flag = True
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
+            item_list = order.items.all()
+            l=[]
+            for i in item_list:
+                if i.item.quantity <= 0 :
+                    flag = False
+                    l.append(i.item.title)
+            print(flag)
             form = CheckoutForm()
-            context = {
-                'form': form,
-                'couponform': CouponForm(),
-                'order': order,
-                'DISPLAY_COUPON_FORM': True
-            }
+            if flag:        
+                
+                context = {
+                    'form': form,
+                    'couponform': CouponForm(),
+                    'order': order,
+                    'DISPLAY_COUPON_FORM': True
+                }
 
-            shipping_address_qs = Address.objects.filter(
-                user=self.request.user,
-                address_type='S',
-                default=True
-            )
-            if shipping_address_qs.exists():
-                context.update(
-                    {'default_shipping_address': shipping_address_qs[0]})
+                shipping_address_qs = Address.objects.filter(
+                    user=self.request.user,
+                    address_type='S',
+                    default=True
+                )
+                if shipping_address_qs.exists():
+                    context.update(
+                        {'default_shipping_address': shipping_address_qs[0]})
 
-            billing_address_qs = Address.objects.filter(
-                user=self.request.user,
-                address_type='B',
-                default=True
-            )
-            if billing_address_qs.exists():
-                context.update(
-                    {'default_billing_address': billing_address_qs[0]})
+                billing_address_qs = Address.objects.filter(
+                    user=self.request.user,
+                    address_type='B',
+                    default=True
+                )
+                if billing_address_qs.exists():
+                    context.update(
+                        {'default_billing_address': billing_address_qs[0]})
 
-            return render(self.request, "checkout.html", context)
+                return render(self.request, "checkout.html", context)
+            else:
+                print(l)
+                context={"outofstock" : True, "list" : l}
+                return render(self.request, "order_summary.html", context)
         except ObjectDoesNotExist:
             messages.info(self.request, "You do not have an active order")
             return redirect("core:checkout")
@@ -88,6 +102,11 @@ class CheckoutView(View):
         form = CheckoutForm(self.request.POST or None)
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
+            item_list = order.items.all()
+            for i in item_list:
+                it = i.item
+                Item.objects.filter(title=i.item.title).update(quantity = it.quantity - i.quantity)
+
             if form.is_valid():
 
                 use_default_shipping = form.cleaned_data.get(
@@ -205,15 +224,9 @@ class CheckoutView(View):
                             self.request, "Please fill in the required billing address fields")
 
                 payment_option = form.cleaned_data.get('payment_option')
-
-                if payment_option == 'S':
-                    return redirect('core:payment', payment_option='stripe')
-                elif payment_option == 'P':
-                    return redirect('core:payment', payment_option='paypal')
-                else:
-                    messages.warning(
-                        self.request, "Invalid payment option selected")
-                    return redirect('core:checkout')
+            order.ordered=True
+            order.save()
+            return redirect('/')
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
             return redirect("core:order-summary")
@@ -532,3 +545,56 @@ class RequestRefundView(View):
 def add_product(request):
     if request.method == 'GET':
         
+@login_required
+def seller(request):
+    seller = Seller.objects.filter(user=request.user)
+    if seller:
+        items = Item.objects.filter(seller=seller[0])
+        print(items)
+        context = {
+            'items' : items
+        }
+        return render(request,"seller.html",context)
+    else:
+        return redirect('/')
+
+
+
+
+
+def shirt(request):
+    items = Item.objects.filter(category='S')
+    print(items)
+    context = {
+        "object_list" : items
+    }
+    return render(request,"shirt.html",context)
+
+
+def shoes(request):
+    items = Item.objects.filter(category='SH')
+    print(items)
+    context = {
+        "object_list" : items
+    }
+    return render(request,"shoes.html",context)
+
+def electronics(request):
+    items = Item.objects.filter(category='E')
+    print(items)
+    context = {
+        "object_list" : items
+    }
+    return render(request,"electronics.html",context)
+
+# @login_required
+# def addproduct(request):
+#     seller = Seller.objects.filter(user=request.user)
+#     if seller:
+#         if request.method == 'POST' :
+#             title = request.POST['title']
+#             price = request.POST['price']
+#             category = request.POST['category']
+#             label = request.POST['label']
+#             slug = request.POST['slug']
+#             description = request.POST['description']

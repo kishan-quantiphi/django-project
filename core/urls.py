@@ -14,6 +14,14 @@ urlpatterns = [
     path('remove-item-from-cart/<slug>/', remove_single_item_from_cart,
          name='remove-single-item-from-cart'),
     path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
+
+    path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
+    path('seller/', seller),
+    path('shirt/', shirt),
+    path('shoes/', shoes),
+    path('electronics/', electronics),
+    #path('addproduct/', addproduct)
+
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
     path('add-product/', add_product),
 ]
