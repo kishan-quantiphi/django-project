@@ -4,3 +4,6 @@ media_root
 static_root
 env
 venv
+db.sqlite3
+.vscode
+core/migrations
