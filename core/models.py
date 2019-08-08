@@ -29,6 +29,7 @@ class UserProfile(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     age = models.IntegerField()
+    user_type = models.CharField(max_length=20)
     one_click_purchasing = models.BooleanField(default=False)
 
     def __str__(self):
