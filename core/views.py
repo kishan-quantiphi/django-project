@@ -14,6 +14,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as auth_logout
 
+import datetime
+import pytz
 import random
 import string
 import stripe
@@ -274,6 +276,7 @@ class CheckoutView(View):
 
                 payment_option = form.cleaned_data.get('payment_option')
             order.ordered=True
+            order.ordered_time=datetime.datetime.now()
             order.save()
             return redirect('/')
         except ObjectDoesNotExist:
@@ -496,6 +499,43 @@ def add_product(request):
 
     else:
         return render(request,'addproduct.html')
+
+
+
+def search(request):
+    if request.method == "POST":
+        print(request.POST.get("search"))
+        items = Item.objects.filter(title__contains=request.POST.get("search")).order_by('title')
+        print(items)
+        context = {
+        "object_list" : items
+        }
+
+        return render(request,"search.html",context)
+    else:
+        return redirect("/")
+
+
+def my_order(request):
+    if request.user.is_authenticated:
+        orders=Order.objects.filter(user=request.user,ordered=True)
+        received=[]
+        for i in orders:
+            tz = pytz.timezone('Asia/Kolkata')
+            t=datetime.datetime.now().replace(tzinfo=tz)-i.ordered_time.replace(tzinfo=tz)
+
+            minutes=int(t.total_seconds() / 60)
+            if minutes>10:
+                received.append("Delivered")
+            else:
+                received.append("Shipped")
+
+        mylist=zip(orders,received)
+        print(mylist)
+        context={
+            "orders" : mylist
+        }
+        return render(request,"my_order.html",context)
 
 #
 #
