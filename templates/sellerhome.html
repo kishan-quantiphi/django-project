@@ -51,7 +51,7 @@
 
       <!-- Brand -->
       <a class="navbar-brand waves-effect" href="/">
-        <strong class="blue-text">DJe-commerce</strong>
+        <strong class="blue-text">Palindrome</strong>
       </a>
 
       <!-- Collapse -->
@@ -127,60 +127,11 @@
   <main>
     <div class="container">
 
-      <!--Navbar-->
-      <nav class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5">
 
-        <!-- Navbar brand -->
-        <span class="navbar-brand">Categories:</span>
-
-        <!-- Collapse button -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
-          aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Collapsible content -->
-        <div class="collapse navbar-collapse" id="basicExampleNav">
-
-          <!-- Links -->
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="/">All
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/shirt">Shirts</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/shoes">Shoes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/electronics">Electronics</a>
-            </li>
-
-          </ul>
-          <!-- Links -->
-
-          <form class="form-inline">
-            <div class="md-form my-0">
-              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            </div>
-          </form>
-        </div>
-        <!-- Collapsible content -->
-
-      </nav>
-      <!--/.Navbar-->
 
       <!-- Add Product -->
       <section class="text-center mb-4">
-        <form method="POST" class="card-body">
-            {% csrf_token %}
-            <div class="submit-row mb-4">
-                <button class="btn btn-primary waves-effect waves-light" type="submit" style="float:right">Add Product</button>
-            </div>
-        </form>
+        
 
         <!--Section: Products v.3-->
         <div class="row wow fadeIn">
@@ -193,7 +144,7 @@
               <div class="view overlay">
                 {% comment %} <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12.jpg" class="card-img-top" {% endcomment %}
                 <img src="{{ item.image.url }}" class="card-img-top">
-                <a href="{{ item.get_absolute_url }}">
+                <a href="/edit_product/{{ item.id }}">
                   <div class="mask rgba-white-slight"></div>
                 </a>
               </div>
@@ -204,8 +155,8 @@
                 </a>
                 <h5>
                   <strong>
-                    <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title }}
-                      <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span>
+                    <a href="/edit_product/{{item.id}}" class="dark-grey-text">{{ item.title }}
+                     <!--  <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span> -->
                     </a>
                   </strong>
                 </h5>
@@ -227,6 +178,15 @@
           </div>
           {% endfor %}
         </div>
+
+
+        <form method="GET" class="card-body">
+
+            <div class="submit-row mb-4">
+                <a href="/add-product"class="btn btn-primary waves-effect waves-light" style="float:right">Add Product</a>
+            </div>
+        </form>
+
 
       </section>
       <!--Section: Products v.3-->

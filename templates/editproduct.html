@@ -10,8 +10,7 @@
       <div class="row">
         <div class="col-md-8 mb-4 centre">
           <div class="card">
-            <form method="POST" action="/add-product/" class="card-body" enctype="multipart/form-data">
-
+            <form method="POST" action="/edit_product/{{item.id}}" class="card-body" enctype="multipart/form-data">
               {% csrf_token %}
 
               <h3>Add Products</h3>
@@ -55,8 +54,8 @@
                 <!-- <div class="md-form mb-5">
                     <label class="required" for="id_slug"></label>
                     Slug:<input type="text" name="slug" class="vTextField" maxlength="50" required="" id="id_slug" value="{{ item.slug }}">
-                </div> -->
-
+                </div>
+ -->
                 <div class="md-form mb-5">
                     <label class="required" for="id_description"></label>
                     Description:<textarea name="description" cols="40" rows="10" class="vLargeTextField" required="" id="id_description">{{item.description}}</textarea>
@@ -67,12 +66,13 @@
                     <pre>
 
                     </pre>
-                    <p class="file-upload">
-                    Add image:
+                    <p class="file-upload">Currently: <img src="{{ item.image.url }}" height="200" width="200"> <!-- dynamically name of image --> </img><br>
+                    Change:
                     <input type="file" name="image" accept="image/*" id="id_image"></p>
                 </div>
 
                 <div class="submit-row mb-4">
+                    <a class="btn btn-danger waves-effect waves-light m-0" href="/delete_product/{{item.id}}">Delete</a>
 
                     <button class="btn btn-primary waves-effect waves-light" type="submit" style="float:right">Save</button>
                 </div>
