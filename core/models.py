@@ -25,7 +25,7 @@ def send_sms(PhoneNumber,Message):
 def send_activation_email(email):
     client = boto3.client('ses',region_name="us-east-1")
     response = client.verify_email_identity(
-        EmailAddress='email'
+        EmailAddress=email
     )
         
 

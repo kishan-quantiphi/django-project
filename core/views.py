@@ -72,10 +72,10 @@ def login_site(request):
         print(password)
         if user:
             up = UserProfile.objects.get(user=user)
-            if up.confirm =='False':
+            if up.confirm ==False:
                 response = client.get_identity_verification_attributes(
                     Identities=[
-                        'ketav.bhatt@quantiphi.com',
+                        up.email,
                     ],
                 )
                 response = json.loads(response)
