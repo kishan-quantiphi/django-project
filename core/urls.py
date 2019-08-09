@@ -29,7 +29,7 @@ urlpatterns = [
     # path('sellerhome/', sellerhome),
     # path('add-product/', add_product),
 
-    path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
+    #path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
     #path('login/', login),
     #path('signup/', signup)
 ]
