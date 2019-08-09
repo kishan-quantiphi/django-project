@@ -20,7 +20,7 @@ import pytz
 import random
 import string
 import stripe
-# import boto3
+import boto3
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -72,13 +72,14 @@ def login_site(request):
         print(password)
         if user:
             up = UserProfile.objects.get(user=user)
-            if up.confirm =='False':
+            if up.confirm ==False:
+                client = boto3.client('ses',region_name='us-east-1')
                 response = client.get_identity_verification_attributes(
                     Identities=[
-                        'ketav.bhatt@quantiphi.com',
+                        up.email,
                     ],
                 )
-                response = json.loads(response)
+                print(type(response))
                 if response['VerificationAttributes'][up.email]['VerificationStatus'] != 'Success':
                     return render(request,"email_verification.html")
                 else:
