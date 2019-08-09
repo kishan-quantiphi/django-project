@@ -72,7 +72,7 @@ def login_site(request):
             if(up.role == "buyer"):
                 return redirect('/')
             else:
-                return HttpResponse("Seller")
+                return redirect('/seller')
         else:
             return HttpResponse('invalid')
 
@@ -308,9 +308,9 @@ class ItemDetailView(DetailView):
 
 
 
-def add_to_cart(request, slug):
+def add_to_cart(request, pk):
     if request.user.is_authenticated:
-        item = get_object_or_404(Item, slug=slug)
+        item = get_object_or_404(Item, pk=pk)
         order_item, created = OrderItem.objects.get_or_create(
             item=item,
             user=request.user,
@@ -320,7 +320,7 @@ def add_to_cart(request, slug):
         if order_qs.exists():
             order = order_qs[0]
             # check if the order item is in the order
-            if order.items.filter(item__slug=item.slug).exists():
+            if order.items.filter(item__pk=item.pk).exists():
                 order_item.quantity += 1
                 order_item.save()
                 messages.info(request, "This item quantity was updated.")
@@ -341,9 +341,9 @@ def add_to_cart(request, slug):
         return redirect('/login')
 
 
-def remove_from_cart(request, slug):
+def remove_from_cart(request, pk):
     if request.user.is_authenticated:
-        item = get_object_or_404(Item, slug=slug)
+        item = get_object_or_404(Item, pk=pk)
         order_qs = Order.objects.filter(
             user=request.user,
             ordered=False
@@ -351,7 +351,7 @@ def remove_from_cart(request, slug):
         if order_qs.exists():
             order = order_qs[0]
             # check if the order item is in the order
-            if order.items.filter(item__slug=item.slug).exists():
+            if order.items.filter(item__pk=item.pk).exists():
                 order_item = OrderItem.objects.filter(
                     item=item,
                     user=request.user,
@@ -362,10 +362,10 @@ def remove_from_cart(request, slug):
                 return redirect("core:order-summary")
             else:
                 messages.info(request, "This item was not in your cart")
-                return redirect("core:product", slug=slug)
+                return redirect("core:product", pk=pk)
         else:
             messages.info(request, "You do not have an active order")
-            return redirect("core:product", slug=slug)
+            return redirect("core:product", pk=pk)
 
 
     else:
@@ -373,9 +373,9 @@ def remove_from_cart(request, slug):
 
 
 
-def remove_single_item_from_cart(request, slug):
+def remove_single_item_from_cart(request, pk):
     if request.user.is_authenticated:
-        item = get_object_or_404(Item, slug=slug)
+        item = get_object_or_404(Item, pk=pk)
         order_qs = Order.objects.filter(
             user=request.user,
             ordered=False
@@ -383,7 +383,7 @@ def remove_single_item_from_cart(request, slug):
         if order_qs.exists():
             order = order_qs[0]
             # check if the order item is in the order
-            if order.items.filter(item__slug=item.slug).exists():
+            if order.items.filter(item__pk=item.pk).exists():
                 order_item = OrderItem.objects.filter(
                     item=item,
                     user=request.user,
@@ -398,10 +398,10 @@ def remove_single_item_from_cart(request, slug):
                 return redirect("core:order-summary")
             else:
                 messages.info(request, "This item was not in your cart")
-                return redirect("core:product", slug=slug)
+                return redirect("core:product", pk=pk)
         else:
             messages.info(request, "You do not have an active order")
-            return redirect("core:product", slug=slug)
+            return redirect("core:product", pk=pk)
 
     else:
         return redirect('/login')
@@ -413,30 +413,30 @@ def remove_single_item_from_cart(request, slug):
 # def edit_product(request)
 
 
-def add_product(request,slug):
+def add_product(request,pk):
     if request.method == 'GET':
-        item = Item.objects.get(slug=slug)
+        item = Item.objects.get(pk=pk)
         context={
             'item':item
         }
         return render(request,'addproduct.html',context)
 
 
-def seller(request):
-    if request.user.is_authenticated:
-        seller = Seller.objects.filter(user=request.user)
-        if seller:
-            items = Item.objects.filter(seller=seller[0])
-            print(items)
-            context = {
-                'items' : items
-            }
-            return render(request,"seller.html",context)
-        else:
-            return redirect('/')
+# def seller(request):
+#     if request.user.is_authenticated:
+#         seller = Seller.objects.filter(user=request.user)
+#         if seller:
+#             items = Item.objects.filter(seller=seller[0])
+#             print(items)
+#             context = {
+#                 'items' : items
+#             }
+#             return render(request,"seller.html",context)
+#         else:
+#             return redirect('/')
 
-    else:
-        return redirect('/login')
+#     else:
+#         return redirect('/login')
 
 
 
@@ -467,9 +467,71 @@ def electronics(request):
     }
     return render(request,"electronics.html",context)
 
-#
-# def sellerhome(request):
-#     return render(request,"sellerhome.html")
+
+def seller(request):
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        if up.role == "seller":
+            items = Item.objects.filter(seller=request.user)
+            print(items)
+            context = {
+                'object_list' : items
+            }
+            return render(request,"sellerhome.html",context)
+        else:
+            return redirect("/login")
+    else:
+        return redirect('/login')
+
+
+
+def edit_product(request,pk):
+    item = Item.objects.get(pk=pk)
+    if request.method == 'GET':
+        context={
+        'item':item
+        }
+        return render(request,'editproduct.html',context)
+
+    if request.method == 'POST':
+        # item = Item.objects.get(id = request.)
+        item.title = request.POST['title']
+        item.price = request.POST['price']
+        item.category= request.POST['category']
+        item.description = request.POST['description']
+        item.quantity = request.POST['quantity']
+    try:
+        if request.FILES.get('image'):
+            item.image=request.FILES.get('image')
+    except Exception as e:
+        print(e)
+    item.label = request.POST['label']
+    item.save()
+    return redirect('/seller')
+
+
+def delete_product(request,pk):
+    item = Item.objects.get(pk=pk).delete()
+    return redirect('/seller')
+
+
+def add_product(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        price = request.POST['price']
+        category= request.POST['category']
+        description = request.POST['description']
+        quantity = request.POST['quantity']
+   
+        label = request.POST['label']
+        image=request.FILES.get('image')
+        item = Item.objects.create(title=title,price=price,category=category,description=description,quantity=quantity,image=image,label=label,seller=request.user)
+        item.save()
+        return redirect('/seller')
+
+    else:
+        return render(request,'addproduct.html')
+
 #
 #
 # def login(request):

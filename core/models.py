@@ -69,7 +69,6 @@ class Item(models.Model):
     price = models.FloatField()
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
-    slug = models.SlugField()
     description = models.TextField()
     quantity = models.IntegerField()
     image = models.ImageField()
@@ -82,17 +81,17 @@ class Item(models.Model):
 
     def get_absolute_url(self):
         return reverse("core:product", kwargs={
-            'slug': self.slug
+            'pk': self.pk
         })
 
     def get_add_to_cart_url(self):
         return reverse("core:add-to-cart", kwargs={
-            'slug': self.slug
+            'pk': self.pk
         })
 
     def get_remove_from_cart_url(self):
         return reverse("core:remove-from-cart", kwargs={
-            'slug': self.slug
+            'pk': self.pk
         })
 
 
