@@ -407,41 +407,6 @@ def remove_single_item_from_cart(request, pk):
         return redirect('/login')
 
 
-
-
-
-# def edit_product(request)
-
-
-def add_product(request,pk):
-    if request.method == 'GET':
-        item = Item.objects.get(pk=pk)
-        context={
-            'item':item
-        }
-        return render(request,'addproduct.html',context)
-
-
-# def seller(request):
-#     if request.user.is_authenticated:
-#         seller = Seller.objects.filter(user=request.user)
-#         if seller:
-#             items = Item.objects.filter(seller=seller[0])
-#             print(items)
-#             context = {
-#                 'items' : items
-#             }
-#             return render(request,"seller.html",context)
-#         else:
-#             return redirect('/')
-
-#     else:
-#         return redirect('/login')
-
-
-
-
-
 def shirt(request):
     items = Item.objects.filter(category='S')
     print(items)

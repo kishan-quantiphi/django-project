@@ -19,6 +19,7 @@ urlpatterns = [
     path('electronics/', electronics),
     path('edit_product/<pk>',edit_product,name='edit_product'),
     path('delete_product/<pk>',delete_product,name='delete_product'),
+
     #path('addproduct/', addproduct)
 
     path('login/', login_site),
@@ -27,4 +28,7 @@ urlpatterns = [
     path('seller/', seller),
     path('add-product/', add_product),
 
+    #path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
+    #path('login/', login),
+    #path('signup/', signup)
 ]

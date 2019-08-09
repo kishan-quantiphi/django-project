@@ -11,6 +11,7 @@
         <div class="col-md-8 mb-4 centre">
           <div class="card">
             <form method="POST" action="/add-product/" class="card-body" enctype="multipart/form-data">
+
               {% csrf_token %}
 
               <h3>Add Products</h3>
@@ -72,7 +73,6 @@
                 </div>
 
                 <div class="submit-row mb-4">
-
 
                     <button class="btn btn-primary waves-effect waves-light" type="submit" style="float:right">Save</button>
                 </div>
