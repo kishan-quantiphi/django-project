@@ -10,9 +10,10 @@ from django.core.mail import send_mail
 
 
 
-client = boto3.client('sns',region_name="us-east-1")
+
 
 def send_sms(PhoneNumber,Message):
+    client = boto3.client('sns',region_name="us-east-1")
     try:
         client.publish(
                 PhoneNumber='+91'+PhoneNumber,
@@ -21,15 +22,12 @@ def send_sms(PhoneNumber,Message):
     except Exception as e:
         print(e)
 
-def send_activation_email(email,message):
-        subject = 'Ecommerce Account created'
-        from_email = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [email]
-        html_message = f'<h1>{message}</h1>'
-        sent_mail=send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=html_message)
-        print("-------------")
-        print(sent_mail)
-        # return sent_mail
+def send_activation_email(email):
+    client = boto3.client('ses',region_name="us-east-1")
+    response = client.verify_email_identity(
+        EmailAddress='email'
+    )
+        
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -61,6 +59,7 @@ class UserProfile(models.Model):
     pincode = models.IntegerField(null=True,blank=True)
     role = models.CharField(max_length=100,null=True,blank=True)
     phonenumber = models.CharField(max_length=100,null=True,blank=True)
+    confirm = models.BooleanField(default=False)
 
 
     def __str__(self):
@@ -70,7 +69,7 @@ def user_save_reciever(sender, instance, created, *args, **kwargs):
     if created:
         message = 'Your account has been created in Ecommerce website'
         send_sms(instance.phonenumber,message)
-        send_activation_email(instance.email,message)
+        send_activation_email(instance.email)
 
 
 post_save.connect(user_save_reciever, sender=UserProfile)

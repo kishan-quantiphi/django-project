@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as auth_logout
-
+import json
 import random
 import string
 import stripe
@@ -55,7 +55,8 @@ def signup(request):
 
         user_profile = UserProfile.objects.create(user=user,name=name,age=age,email=email,city=city,country=country,pincode=pincode,role=role,phonenumber=phonenumber)
         user_profile.save()
-        return redirect('/login')
+        return render(request,"email_verification.html")
+        # return redirect('/login')
     else :
         return render(request,"signup.html")
 
@@ -67,8 +68,22 @@ def login_site(request):
         print(username)
         print(password)
         if user:
-            login(request, user)
             up = UserProfile.objects.get(user=user)
+            if up.confirm =='False':
+                response = client.get_identity_verification_attributes(
+                    Identities=[
+                        'ketav.bhatt@quantiphi.com',
+                    ],
+                )
+                response = json.loads(response)
+                if response['VerificationAttributes'][up.email]['VerificationStatus'] != 'Success':
+                    return render(request,"email_verification.html")
+                else:
+                    up.confirm=True
+                    up.save()
+
+            login(request, user)
+            
             if(up.role == "buyer"):
                 return redirect('/')
             else:
