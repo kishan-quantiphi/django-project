@@ -121,6 +121,7 @@ class CheckoutView(View):
     def get(self, *args, **kwargs):
         flag = True
         try:
+
             order = Order.objects.get(user=self.request.user, ordered=False)
             item_list = order.items.all()
             l=[]
@@ -553,19 +554,3 @@ def my_order(request):
             "orders" : mylist
         }
         return render(request,"my_order.html",context)
-
-#
-#
-# def login(request):
-#     return render(request,"login.html")
-# @login_required
-# def addproduct(request):
-#     seller = Seller.objects.filter(user=request.user)
-#     if seller:
-#         if request.method == 'POST' :
-#             title = request.POST['title']
-#             price = request.POST['price']
-#             category = request.POST['category']
-#             label = request.POST['label']
-#             slug = request.POST['slug']
-#             description = request.POST['description']
