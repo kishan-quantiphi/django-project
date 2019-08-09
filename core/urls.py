@@ -12,7 +12,7 @@ urlpatterns = [
     path('remove-from-cart/<slug>/', remove_from_cart, name='remove-from-cart'),
     path('remove-item-from-cart/<slug>/', remove_single_item_from_cart,
          name='remove-single-item-from-cart'),
-   
+
 
     path('seller/', seller),
     path('shirt/', shirt),
@@ -21,8 +21,9 @@ urlpatterns = [
     #path('addproduct/', addproduct)
 
     path('login/', login_site),
-    path('signup/', signup)
 
+    path('signup/', signup)
+    # path('sellerhome/', sellerhome),
     # path('add-product/', add_product),
 
 ]
