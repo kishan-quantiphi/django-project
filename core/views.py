@@ -545,14 +545,35 @@ class RequestRefundView(View):
 # def edit_product(request)
 
 
-def add_product(request,slug):
+def edit_product(request,id):
+    item = Item.objects.get(id=id)
     if request.method == 'GET':
-        item = Item.objects.get(slug=slug)
         context={
             'item':item
         }
         return render(request,'addproduct.html',context)
-        
+
+    if request.method == 'POST':
+        # item = Item.objects.get(id = request.)
+        item.title = request.POST['title']
+        item.price = request.POST['price']
+        item.category= request.POST['category']
+        item.description = request.POST['description']
+        item.quantity = request.POST['quantity']
+        try:
+            if request.POST['image']:
+                item.image = request.POST['image']
+        except Exception as e:
+            print(e)
+        item.label = request.POST['label']
+        item.save()
+        return redirect('/')
+       
+def delete_product(request,id):
+    item = Item.objects.get(id=id).delete()
+    return redirect('/')
+
+
 @login_required
 def seller(request):
     seller = Seller.objects.filter(user=request.user)

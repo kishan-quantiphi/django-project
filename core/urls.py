@@ -20,8 +20,12 @@ urlpatterns = [
     path('shirt/', shirt),
     path('shoes/', shoes),
     path('electronics/', electronics),
+    path('edit_product/<id>',edit_product,name='edit_product'),
+    path('delete_product/<id>',delete_product,name='delete_product'),
+
     #path('addproduct/', addproduct)
     # path('add-product/', add_product),
+
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
     #path('login/', login),
     #path('signup/', signup)
