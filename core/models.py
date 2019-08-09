@@ -39,13 +39,18 @@ ADDRESS_CHOICES = (
 
 
 class UserProfile(models.Model):
-    TYPE = (
-        ('Seller', 'Seller'),
-        ('Buyer', 'Buyer'),
-    )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    one_click_purchasing = models.BooleanField(default=False)
+
+    name = models.CharField(max_length=100,null=True,blank=True)
+    age = models.IntegerField(null=True,blank=True)
+    email = models.CharField(max_length=100,null=True,blank=True)
+    city = models.CharField(max_length=100,null=True,blank=True)
+    country = models.CharField(max_length=100,null=True,blank=True)
+    pincode = models.IntegerField(null=True,blank=True)
+    role = models.CharField(max_length=100,null=True,blank=True)
+    phonenumber = models.CharField(max_length=100,null=True,blank=True)
+
 
     def __str__(self):
         return self.user.username
@@ -60,15 +65,17 @@ class UserProfile(models.Model):
 
 
 class Item(models.Model):
-    title = models.CharField(max_length=100,null=True,blank=True)
-    price = models.FloatField(null=True,blank=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2,default='S')
-    label = models.CharField(choices=LABEL_CHOICES, max_length=1,default='P')
-    slug = models.SlugField(blank=True,null=True)
-    description = models.TextField(null=True,blank=True,default=0)
-    quantity = models.IntegerField(blank=True,null=True)
-    image = models.ImageField(blank=True,null=True)
-    seller = models.ForeignKey('Seller', on_delete=models.CASCADE,blank=True,null=True)
+    title = models.CharField(max_length=100)
+    price = models.FloatField()
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    label = models.CharField(choices=LABEL_CHOICES, max_length=1)
+    slug = models.SlugField()
+    description = models.TextField()
+    quantity = models.IntegerField()
+    image = models.ImageField()
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.title
