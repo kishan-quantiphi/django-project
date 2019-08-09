@@ -6,6 +6,7 @@ from django.shortcuts import reverse
 from django_countries.fields import CountryField
 import boto3
 from django.db.models.signals import post_save,pre_save,m2m_changed
+from django.core.mail import send_mail
 
 
 
@@ -14,11 +15,21 @@ client = boto3.client('sns',region_name="us-east-1")
 def send_sms(PhoneNumber,Message):
     try:
         client.publish(
-                PhoneNumber='+918806418421',
-                Message='hey hafhhjfhda'
+                PhoneNumber='+91'+PhoneNumber,
+                Message=Message
         )    
     except Exception as e:
         print(e)
+
+def send_activation_email(email,message):
+        subject = 'Ecommerce Account created'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [email]
+        html_message = f'<h1>{message}</h1>'
+        sent_mail=send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=html_message)
+        print("-------------")
+        print(sent_mail)
+        # return sent_mail
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -55,13 +66,14 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-# def user_save_reciever(sender, instance, created, *args, **kwargs):
-#     if created:
-#         message = 'Your account has been created in Ecommerce website'
-#         send_sms(instance.phonenumber,message)
+def user_save_reciever(sender, instance, created, *args, **kwargs):
+    if created:
+        message = 'Your account has been created in Ecommerce website'
+        send_sms(instance.phonenumber,message)
+        send_activation_email(instance.email,message)
 
 
-# post_save.connect(user_save_reciever, sender=UserProfile)
+post_save.connect(user_save_reciever, sender=UserProfile)
 
 
 class Item(models.Model):
