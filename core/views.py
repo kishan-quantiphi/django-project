@@ -25,19 +25,6 @@ import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-# client = boto3.client('sns',region_name="us-east-1")
-# def send_sms(PhoneNumber,Message):
-#     try:
-#         client.publish(
-#                 PhoneNumber='+918806418421',
-#                 Message='hey hafhhjfhda'
-#         )
-#         return True
-#     except Exception as e:
-#         print(e)
-#         return False
-
-
 
 def signup(request):
     if request.method == 'POST':
@@ -72,21 +59,8 @@ def login_site(request):
         print(password)
         if user:
             up = UserProfile.objects.get(user=user)
-            if up.confirm ==False:
-                response = client.get_identity_verification_attributes(
-                    Identities=[
-                        up.email,
-                    ],
-                )
-                response = json.loads(response)
-                if response['VerificationAttributes'][up.email]['VerificationStatus'] != 'Success':
-                    return render(request,"email_verification.html")
-                else:
-                    up.confirm=True
-                    up.save()
-
             login(request, user)
-            
+
             if(up.role == "buyer"):
                 return redirect('/')
             else:
@@ -506,7 +480,7 @@ def add_product(request):
         category= request.POST['category']
         description = request.POST['description']
         quantity = request.POST['quantity']
-   
+
         label = request.POST['label']
         image=request.FILES.get('image')
         item = Item.objects.create(title=title,price=price,category=category,description=description,quantity=quantity,image=image,label=label,seller=request.user)

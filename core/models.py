@@ -18,7 +18,7 @@ def send_sms(PhoneNumber,Message):
         client.publish(
                 PhoneNumber='+91'+PhoneNumber,
                 Message=Message
-        )    
+        )
     except Exception as e:
         print(e)
 
@@ -27,7 +27,7 @@ def send_activation_email(email):
     response = client.verify_email_identity(
         EmailAddress=email
     )
-        
+
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -64,15 +64,15 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-def user_save_reciever(sender, instance, created, *args, **kwargs):
-    if created:
-        message = 'Your account has been created in Ecommerce website'
-        send_sms(instance.phonenumber,message)
-        send_activation_email(instance.email)
-
-
-post_save.connect(user_save_reciever, sender=UserProfile)
+#
+# def user_save_reciever(sender, instance, created, *args, **kwargs):
+#     if created:
+#         message = 'Your account has been created in Ecommerce website'
+#         send_sms(instance.phonenumber,message)
+#         send_activation_email(instance.email)
+#
+#
+# post_save.connect(user_save_reciever, sender=UserProfile)
 
 
 class Item(models.Model):
