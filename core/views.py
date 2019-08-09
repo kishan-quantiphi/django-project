@@ -13,7 +13,10 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as auth_logout
+import json
 
+import datetime
+import pytz
 import random
 import string
 import stripe
@@ -55,7 +58,8 @@ def signup(request):
 
         user_profile = UserProfile.objects.create(user=user,name=name,age=age,email=email,city=city,country=country,pincode=pincode,role=role,phonenumber=phonenumber)
         user_profile.save()
-        return redirect('/login')
+        return render(request,"email_verification.html")
+        # return redirect('/login')
     else :
         return render(request,"signup.html")
 
@@ -67,8 +71,22 @@ def login_site(request):
         print(username)
         print(password)
         if user:
-            login(request, user)
             up = UserProfile.objects.get(user=user)
+            if up.confirm =='False':
+                response = client.get_identity_verification_attributes(
+                    Identities=[
+                        'ketav.bhatt@quantiphi.com',
+                    ],
+                )
+                response = json.loads(response)
+                if response['VerificationAttributes'][up.email]['VerificationStatus'] != 'Success':
+                    return render(request,"email_verification.html")
+                else:
+                    up.confirm=True
+                    up.save()
+
+            login(request, user)
+            
             if(up.role == "buyer"):
                 return redirect('/')
             else:
@@ -274,6 +292,7 @@ class CheckoutView(View):
 
                 payment_option = form.cleaned_data.get('payment_option')
             order.ordered=True
+            order.ordered_time=datetime.datetime.now()
             order.save()
             return redirect('/')
         except ObjectDoesNotExist:
@@ -496,6 +515,43 @@ def add_product(request):
 
     else:
         return render(request,'addproduct.html')
+
+
+
+def search(request):
+    if request.method == "POST":
+        print(request.POST.get("search"))
+        items = Item.objects.filter(title__contains=request.POST.get("search")).order_by('title')
+        print(items)
+        context = {
+        "object_list" : items
+        }
+
+        return render(request,"search.html",context)
+    else:
+        return redirect("/")
+
+
+def my_order(request):
+    if request.user.is_authenticated:
+        orders=Order.objects.filter(user=request.user,ordered=True)
+        received=[]
+        for i in orders:
+            tz = pytz.timezone('Asia/Kolkata')
+            t=datetime.datetime.now().replace(tzinfo=tz)-i.ordered_time.replace(tzinfo=tz)
+
+            minutes=int(t.total_seconds() / 60)
+            if minutes>10:
+                received.append("Delivered")
+            else:
+                received.append("Shipped")
+
+        mylist=zip(orders,received)
+        print(mylist)
+        context={
+            "orders" : mylist
+        }
+        return render(request,"my_order.html",context)
 
 #
 #

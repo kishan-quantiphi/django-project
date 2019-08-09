@@ -27,6 +27,11 @@ urlpatterns = [
     path('signup/', signup),
     path('seller/', seller),
     path('add-product/', add_product),
+    path('search/', search),
+
+    path('my_order/', my_order),
+
+
 
     #path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
     #path('login/', login),
