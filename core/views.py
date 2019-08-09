@@ -76,7 +76,7 @@ def login_site(request):
         else:
             return HttpResponse('invalid')
 
-    else:   
+    else:
         return render(request, 'login.html')
 
 def create_ref_code():
@@ -420,7 +420,7 @@ def add_product(request,slug):
             'item':item
         }
         return render(request,'addproduct.html',context)
-        
+
 
 def seller(request):
     if request.user.is_authenticated:
@@ -468,8 +468,8 @@ def electronics(request):
     return render(request,"electronics.html",context)
 
 #
-# def signup(request):
-#     return render(request,"signup.html")
+# def sellerhome(request):
+#     return render(request,"sellerhome.html")
 #
 #
 # def login(request):
